@@ -1,0 +1,13 @@
+[Unit]
+Description=RPI Camera Server
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python /home/<youruser>/rpi_server_camera.py
+Restart=on-failure
+User=youruser
+Group=yourgroup
+
+[Install]
+WantedBy=multi-user.target
