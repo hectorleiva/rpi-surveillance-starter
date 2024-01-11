@@ -54,18 +54,24 @@ $ timeout $DURATION # <ffmpeg-commands> - see below for the cli command string t
 - `-preset slow` processes the video to compress it to save space
 - `-reconnect_streamed 1`, `-reconnect_delay_max 5` enable reconnection features
 - `-f segment` split the output into multiple segments
-- `-segment_time 5` splits the segments after a duration of time (number means seconds, but I have noticed that the actual length of the clip is x2. 5 = 10 seconds in actual video time)
+- `-segment_time 5` splits the segments after a duration of time (number means seconds, but I have noticed that the actual length of the clip is x2. 5 = 10 seconds in actual video time).
+  (
+  The nature of the segment video splits not being exact is well known: https://ffmpeg.org/ffmpeg-formats.html > "Note that splitting may not be accurate, unless you force the reference stream key-frames at the given time. See the introductory notice and the examples below."
+  )
+
 - `-reset_timestamps 1` resets timestamps at the begnning of each segment to start from 0
 - `-strftime 1 "%Y-%m-%d_%H-%M-%S_output.mp4"` converts the output file's filename to something like "2024-01-07_15-48-18_output.mp4"
 
 ### Examples
 
-#### H.264
+#### H.264 - NVENC codec
+
+If the system has an onboard NVIDIA graphics card, we can use the NVIDIA codec to do the footage capturing instead in order to save CPU cycles.
 
 ```
 ffmpeg -i http://<ip-address>:8000/stream.mjpg \                                              148 ↵
 -an \
--c:v libx264 \
+-c:v h264_nvenc \
 -crf 23 \
 -preset slow \
 -reconnect_streamed 1 \
